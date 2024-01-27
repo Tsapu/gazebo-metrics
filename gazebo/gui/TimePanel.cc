@@ -17,6 +17,7 @@
 #include <functional>
 #include <mutex>
 #include <sstream>
+#include <fstream>
 
 #include <boost/lexical_cast.hpp>
 
@@ -76,6 +77,21 @@ TimePanel::TimePanel(QWidget *_parent)
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
   timer->start(33);
+
+  // Open file for writing FPS
+  const char* homeDirCStr = getenv("HOME");
+  if (homeDirCStr == nullptr) {
+    std::cerr << "HOME is not set\n";
+  } else {
+    std::string homeDir = homeDirCStr;
+    std::string filePath = homeDir + "/.ros/GAZEBO_FPS_out.txt";
+    std::cout << "HOME: " << homeDir << "\n";
+    std::cout << "Trying to open file at: " << filePath << "\n";
+    outputFile.open(filePath);
+    if (!outputFile.is_open()) {
+      std::cerr << "Failed to open FPS_out.txt\n";
+    }
+  }
 
   // Connections
   this->dataPtr->connections.push_back(
@@ -317,7 +333,14 @@ void TimePanel::Update()
   if (cam)
   {
     std::ostringstream avgFPS;
-    avgFPS << std::fixed << std::setprecision(2) << cam->AvgFPS();
+    avgFPS << std::fixed << std::setprecision(1) << cam->AvgFPS();
+
+    if (outputFile.is_open()) {
+      outputFile << avgFPS.str() << "\n";
+    } else {
+      std::cerr << "FPS_out.txt is not open\n";
+    }
+
 
     if (this->dataPtr->timeWidget->isVisible())
     {

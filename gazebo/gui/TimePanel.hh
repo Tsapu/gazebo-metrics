@@ -20,6 +20,7 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <fstream> 
 
 #include "gazebo/gui/qt.h"
 #include "gazebo/gui/TimeWidget.hh"
@@ -121,6 +122,10 @@ namespace gazebo
       /// \internal
       /// \brief Pointer to private data.
       private: TimePanelPrivate *dataPtr;
+
+      // File for exporting FPS metrics
+      private:
+        std::ofstream outputFile;
     };
   }
 }
