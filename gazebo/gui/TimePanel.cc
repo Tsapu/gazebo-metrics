@@ -124,6 +124,10 @@ TimePanel::~TimePanel()
 
   delete this->dataPtr;
   this->dataPtr = NULL;
+
+  if (outputFile.is_open()) {
+    outputFile.close();
+  }
 }
 
 /////////////////////////////////////////////////
