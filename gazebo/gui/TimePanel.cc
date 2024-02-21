@@ -337,12 +337,11 @@ void TimePanel::Update()
   if (cam)
   {
     std::ostringstream avgFPS;
-    avgFPS << std::fixed << std::setprecision(1) << cam->AvgFPS();
+    avgFPS << std::fixed << std::setprecision(2) << cam->AvgFPS();
 
-    if (outputFile.is_open()) {
+    if (outputFile.is_open() && this->lastWrittenFPS != avgFPS.str())  {
       outputFile << avgFPS.str() << "\n";
-    } else {
-      std::cerr << "FPS_out.txt is not open\n";
+      this->lastWrittenFPS = avgFPS.str();
     }
 
 

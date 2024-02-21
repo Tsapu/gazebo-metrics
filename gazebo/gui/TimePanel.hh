@@ -126,6 +126,7 @@ namespace gazebo
       // File for exporting FPS metrics
       private:
         std::ofstream outputFile;
+        std::string lastWrittenFPS = "0"; 
     };
   }
 }
